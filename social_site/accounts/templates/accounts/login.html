@@ -1,0 +1,14 @@
+{% extends "socialapp/base.html" %}
+{% load bootstrap5 %}
+{% block title %}
+    <title>Log In</title>
+{% endblock title %}
+
+{% block content %}
+<h1>Log In</h1>
+<form method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button class="btn btn-outline-success" type="submit">Log In</button>
+</form>
+{% endblock content %}
