@@ -1,8 +1,10 @@
-from django.views.generic import TemplateView, CreateView, DetailView, ListView, RedirectView
+from django.views.generic import TemplateView, CreateView, DetailView, ListView, RedirectView, View, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.http import JsonResponse
+from django.db import IntegrityError
 from .models import Group, GroupMember
 
 
@@ -23,39 +25,50 @@ class ListGroup(ListView):
     model = Group
 
 
-class JoinGroup(LoginRequiredMixin, RedirectView):
+class JoinGroup(LoginRequiredMixin, View):
 
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('socialapp:single', kwargs={'slug': self.kwargs.get('slug')})
+    # def get_redirect_url(self, *args, **kwargs):
+    #     return reverse('socialapp:single', kwargs={'slug': self.kwargs.get('slug')})
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         group = get_object_or_404(Group, slug=self.kwargs.get('slug'))
 
         try:
-            GroupMember.objects.create(user=self.request.user, group=group)
+            GroupMember.objects.create(user=request.user, group=group)
         except IntegrityError:
-            messages.warning(self.request, ('Warning already a member!'))
+            messages.warning(request, 'Warning already a member!')
         else:
-            messages.success(self.request, 'You are now a member!')
+            messages.success(request, 'You are now a member!')
 
-        return super().get(request, *args, **kwargs)
+        # is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        # if is_ajax:
+        members_count = group.members.count()
+        return JsonResponse({'members_count': members_count})
+        # else:
+        #     return super().get(request, *args, **kwargs)
 
 
-class LeaveGroup(LoginRequiredMixin, RedirectView):
+class LeaveGroup(LoginRequiredMixin, View):
 
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('socialapp:single', kwargs={'slug': self.kwargs.get('slug')})
+    # def get_redirect_url(self, *args, **kwargs):
+    #     return reverse('socialapp:single', kwargs={'slug': self.kwargs.get('slug')})
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
 
         try:
             membership = GroupMember.objects.filter(
-                user=self.request.user, group__slug=self.kwargs.get('slug')
+                user=request.user, group__slug=self.kwargs.get('slug')
             ).get()
         except GroupMember.DoesNotExist:
-            messages.warning(self.request, "Sorry you aren't in this group!")
+            messages.warning(request, "Sorry you aren't in this group!")
+            print('dope')
         else:
             membership.delete()
-            messages.success(self.request, 'You have left the group!')
+            messages.success(request, 'You have left the group!')
 
-        return super().get(request, *args, **kwargs)
+
+        members_count = membership.group.members.count()
+        return JsonResponse({'members_count': members_count})
+
+    # else:
+    #     return HttpResponseBadRequest('Invalid request')

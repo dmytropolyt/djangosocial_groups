@@ -12,21 +12,25 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Take environment variables from .env file
+env = environ.Env()
+environ.Env.read_env(BASE_DIR.parent / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG"))
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
 
 
 # Application definition
@@ -82,12 +86,12 @@ WSGI_APPLICATION = 'social_site.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        'NAME': os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        'USER': os.environ.get("SQL_USER", "user"),
-        'PASSWORD': os.environ.get("SQL_PASSWORD", "password"),
-        'HOST': os.environ.get("SQL_HOST", "localhost"),
-        'PORT': os.environ.get("SQL_PORT", "5432"),
+        'ENGINE': env('SQL_ENGINE'),
+        'NAME': env("SQL_DATABASE"),
+        'USER': env("SQL_USER"),
+        'PASSWORD': env("SQL_PASSWORD"),
+        'HOST': env("SQL_HOST"),
+        'PORT': env("SQL_PORT"),
     }
 }
 
@@ -131,7 +135,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = (
-        BASE_DIR / 'frontend/dist',
+        BASE_DIR / 'frontend/build',
 )
 
 

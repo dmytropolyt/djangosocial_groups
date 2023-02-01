@@ -1,19 +1,21 @@
 {% extends 'socialapp/group_base.html' %}
+{% load static %}
 {% block pregroup %}
 
 <h1>{{ group.name }}</h1>
-<h2>Member Count: {{ group.members.count }}</h2>
+<h2 id="memberCount">Member Count: {{ group.members.count }}</h2>
 
 <div class="content">
+    {% csrf_token %}
     {% if user in group.members.all %}
 
-        <a href="{% url 'socialapp:leave' slug=group.slug %}"
-           class="btn btn-lg btn-fill btn-warning"><i class="bi bi-x-circle">Leave</i></a>
+        <button class="btn btn-lg btn-fill btn-warning"
+                id="joinLeave" data-group-slug="{{ group.slug }}"><i class="bi bi-x-circle">Leave</i></button>
 
     {% else %}
 
-        <a href="{% url 'socialapp:join' slug=group.slug %}"
-           class="btn btn-lg btn-fill btn-warning"><i class="bi bi-check-circle">Join</i></a>
+        <button class="btn btn-lg btn-fill btn-warning"
+                id="joinLeave" data-group-slug="{{ group.slug }}"><i class="bi bi-check-circle">Join</i></button>
 
     {% endif %}
 </div>
@@ -32,4 +34,7 @@
     {% endif %}
 
 </div>
+
+
 {% endblock %}
+
