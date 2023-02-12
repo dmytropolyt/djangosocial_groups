@@ -10,5 +10,6 @@ urlpatterns = [
     path('new/', views.CreateGroup.as_view(), name='create'),
     path('posts/in/<slug:slug>/', views.SingleGroup.as_view(), name='single'),
     path('join/<slug:slug>/', views.JoinGroup.as_view(), name='join'),
-    path('leave/<slug:slug>/', views.LeaveGroup.as_view(), name='leave')
+    path('leave/<slug:slug>/', views.LeaveGroup.as_view(), name='leave'),
+    path('update/<slug:slug>/', views.UpdateView.as_view(), name='update')
 ]

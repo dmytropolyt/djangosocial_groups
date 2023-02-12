@@ -1,0 +1,57 @@
+.mycontent {
+  padding-top: 100px;
+  border: 10px solid red;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+  background: #e9ec9a;;
+  margin: 0;
+}
+
+
+#note {
+  position: absolute;
+  color: rgba(249,241,204,1);
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  margin: auto;
+  text-align: center;
+  user-select: none;
+  font-family: Arial;
+}
+
+.group-image-list {
+    width: 58px;
+    height: 58px;
+    padding: 2px;
+    border: 2px solid #f4f4f4;
+}
+
+/* navbar */
+nav {
+    margin-bottom: 40px;
+}
+
+/* groups */
+.group-paginator {
+    width: 500px;
+    margin-top: 50px;
+    margin-left: 50%;
+}
+
+.group-detail-img {
+    width: 370px;
+    height: 370px;
+}
+
+/* posts */
+.post-detail {
+    background-color: #F0F8FF;
+    border: 1px solid #696969;
+    border-radius: 5px;
+}

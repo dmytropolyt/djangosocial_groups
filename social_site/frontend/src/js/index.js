@@ -1,6 +1,7 @@
 import '../sass/styles.scss';
 import 'jquery';
 
+
 $('#joinLeave').on('click', function() {
 
     var icon = $('.bi-check-circle');

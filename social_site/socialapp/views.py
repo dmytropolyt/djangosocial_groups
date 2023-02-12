@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView, DetailView, ListView, RedirectView, View, DeleteView
+from django.views.generic import TemplateView, CreateView, DetailView, ListView, View, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
@@ -13,8 +13,19 @@ class HomeView(TemplateView):
 
 
 class CreateGroup(LoginRequiredMixin, CreateView):
-    fields = ('name', 'description')
+    fields = ('name', 'description', 'image')
     model = Group
+
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.owner = self.request.user
+        f.save()
+        return super().form_valid(form)
+
+
+class UpdateGroup(PermissionRequiredMixin, UpdateView):
+    model = Group
+    fields = ['name', 'description', 'image']
 
 
 class SingleGroup(DetailView):
@@ -23,13 +34,10 @@ class SingleGroup(DetailView):
 
 class ListGroup(ListView):
     model = Group
+    paginate_by = 5
 
 
 class JoinGroup(LoginRequiredMixin, View):
-
-    # def get_redirect_url(self, *args, **kwargs):
-    #     return reverse('socialapp:single', kwargs={'slug': self.kwargs.get('slug')})
-
     def post(self, request, *args, **kwargs):
         group = get_object_or_404(Group, slug=self.kwargs.get('slug'))
 
@@ -44,14 +52,9 @@ class JoinGroup(LoginRequiredMixin, View):
         # if is_ajax:
         members_count = group.members.count()
         return JsonResponse({'members_count': members_count})
-        # else:
-        #     return super().get(request, *args, **kwargs)
 
 
 class LeaveGroup(LoginRequiredMixin, View):
-
-    # def get_redirect_url(self, *args, **kwargs):
-    #     return reverse('socialapp:single', kwargs={'slug': self.kwargs.get('slug')})
 
     def post(self, request, *args, **kwargs):
 
@@ -66,9 +69,5 @@ class LeaveGroup(LoginRequiredMixin, View):
             membership.delete()
             messages.success(request, 'You have left the group!')
 
-
         members_count = membership.group.members.count()
         return JsonResponse({'members_count': members_count})
-
-    # else:
-    #     return HttpResponseBadRequest('Invalid request')

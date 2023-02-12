@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.http import Http404
 from braces.views import SelectRelatedMixin
-from .models import Post
-# from .forms import
+from .models import Post, PostImage
+from .forms import PostForm, PostImageForm
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 
@@ -45,14 +45,40 @@ class PostDetail(SelectRelatedMixin, DetailView):
 
 
 class CreatePost(LoginRequiredMixin, SelectRelatedMixin, CreateView):
-    fields = ('message', 'group')
+    form_class = PostForm
     model = Post
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.save()
+        files = self.request.FILES.getlist("image")
+        f = form.save(commit=False)
+        f.user = self.request.user
+        f.save()
+
+        for image in files:
+            PostImage.objects.create(post=f, image=image)
+
+        messages.success(self.request, 'Post has been added!')
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_form'] = PostImageForm
+        return context
+
+# Later I'll add opportunity to change post's images
+class UpdatePost(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'message']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_update'] = True
+        return context
 
 
 class DeletePost(LoginRequiredMixin, SelectRelatedMixin, DeleteView):

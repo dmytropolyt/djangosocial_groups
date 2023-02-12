@@ -1,7 +1,15 @@
-<div class="post media">
-    <h3>{{ post.message_html|safe }}</h3>
+<div class="post-detail media shadow p-3">
+    <h3 class="text-center mt-2">{{ post.title }}</h3>
     <div class="media-body">
 <!--        <strong>{{ post.user.username }}</strong>-->
+        <div class="row">
+            {% for image in post.images.all %}
+                <div class="col-md-4">
+                    <img class="img-thumbnail" src="{{ image.image.url }}">
+                </div>
+            {% endfor %}
+        </div>
+        <p>{{ post.message_html|safe }}</p>
         <h5 class="media-heading">
         <span class="username">
             <a href="{% url 'posts:for_user' username=post.user.username %}">@{{ post.user.username }}</a>
@@ -16,6 +24,10 @@
                 <a href="{% url 'posts:delete' pk=post.pk %}" title="delete" class="btn btn-simple">
                     <i class="bi bi-trash3 text-danger" aria-hidden="true"></i>
                     <span class="text-danger icon-label">Delete</span>
+                </a>
+                <a href="{% url 'posts:update' pk=post.pk %}" title="update" class="btn btn-simple">
+                    <i class="bi bi-pencil text-warning" aria-hidden="true"></i>
+                    <span class="text-warning icon-label">Update</span>
                 </a>
             {% endif %}
         </div>

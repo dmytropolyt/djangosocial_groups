@@ -2,14 +2,13 @@
 
 {% block pregroup %}
 <div class="col-md-4">
-    <div class="content">
+    <div class="content mb-4">
         {% if user.is_authenticated %}
-            <h2>Welcome Back!<a href="{% url 'posts:for_user' username=user.username%}">@{{ user.username }}</a></h2>
+            <h2 class="mb-3">Welcome Back! <a href="{% url 'posts:for_user' username=user.username%}">@{{ user.username }}</a></h2>
 
         {% endif %}
 
-        <h2>Groups</h2>
-        <p>Welcome to the groups page!</p>
+        <p>You can join or create your own group</p>
 
     </div>
     {% if user.is_authenticated %}
@@ -23,11 +22,12 @@
 
 {% block group_content %}
 <div class="col-md-8">
+    <h2 class="mb-3"> Groups: </h2>
     <div class="list-group">
         {% for group in object_list %}
             <a class="list-group-item" href="{% url 'socialapp:single' slug=group.slug %}">
-                <h3 class="title list-group-item-heading">{{ group.name }}</h3>
-                <div class="list-group-item-text container-fluid">
+                <h3 class="title list-group-item-heading mb-3"><img class="img-fluid rounded-circle group-image-list" src="{{ group.image.url }}"> {{ group.name }}</h3>
+                <div class="list-group-item-text container-fluid mb-3">
                     {{ group.description_html|safe }}
                     <div class="row">
                         <div class="col-md-4">
@@ -44,4 +44,31 @@
         {% endfor %}
     </div>
 </div>
+
+    {% if is_paginated %}
+        <div class="group-paginator">
+            <nav aria-label="page navigation">
+                <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+
 {% endblock %}

@@ -3,19 +3,19 @@
   "assets": {
     "css/bundle.css": {
       "name": "css/bundle.css",
-      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/dist/css/bundle.css"
+      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/build/css/bundle.css"
     },
     "fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47": {
       "name": "fonts/bootstrap-icons.woff?24e3eb84d0bcaf83d77f904c78ac1f47",
-      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/dist/fonts/bootstrap-icons.woff"
+      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/build/fonts/bootstrap-icons.woff"
     },
     "fonts/bootstrap-icons.woff2?24e3eb84d0bcaf83d77f904c78ac1f47": {
       "name": "fonts/bootstrap-icons.woff2?24e3eb84d0bcaf83d77f904c78ac1f47",
-      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/dist/fonts/bootstrap-icons.woff2"
+      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/build/fonts/bootstrap-icons.woff2"
     },
     "js/bundle.js": {
       "name": "js/bundle.js",
-      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/dist/js/bundle.js"
+      "path": "/home/dmytro/python_projects/udemy_javascript_django/django_practice/social_site/frontend/build/js/bundle.js"
     }
   },
   "chunks": {
